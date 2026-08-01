@@ -9,6 +9,7 @@
         :root {
             --primary: #047857; 
             --primary-dark: #065f46;
+            --danger: #ef4444;
             --bg-color: #f3f4f6;
             --text-dark: #1f2937;
             --text-light: #6b7280;
@@ -18,6 +19,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-dark); }
 
+        /* Login */
         #login-screen {
             display: flex; justify-content: center; align-items: center; height: 100vh;
             background: linear-gradient(135deg, var(--primary), #34d399);
@@ -28,35 +30,44 @@
         }
         .logo-img { width: 100px; height: 100px; object-fit: contain; margin-bottom: 20px; border-radius: 50%; background: #e5e7eb; }
         .input-group { margin-bottom: 15px; text-align: left; }
-        .input-group label { display: block; font-size: 14px; margin-bottom: 5px; color: var(--text-light); }
-        .input-group input { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 16px; }
-        .btn-primary { width: 100%; background: var(--primary); color: white; padding: 12px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .input-group label { display: block; font-size: 14px; margin-bottom: 5px; color: var(--text-light); font-weight: 500;}
+        .input-group input, .input-group select { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; }
+        
+        /* Buttons */
+        .btn-primary { width: 100%; background: var(--primary); color: white; padding: 12px; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .btn-primary:hover { background: var(--primary-dark); }
+        .btn-danger { background: var(--danger); color: white; padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;}
+        .btn-small { padding: 8px 12px; font-size: 13px; background: #e5e7eb; color: var(--text-dark); border: none; border-radius: 4px; cursor: pointer;}
+        
         .lupa-pass { display: block; margin-top: 15px; font-size: 13px; color: var(--primary); text-decoration: none; cursor: pointer; }
 
+        /* Layout */
         #app-screen { display: none; height: 100vh; display: flex; }
-        
         .sidebar { width: 250px; background: var(--white); border-right: 1px solid #e5e7eb; display: flex; flex-direction: column; }
         .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid #e5e7eb; }
-        .sidebar-header h2 { font-size: 18px; color: var(--primary); margin-top: 10px;}
+        .sidebar-header h2 { font-size: 16px; color: var(--primary); margin-top: 10px;}
         .menu-list { list-style: none; padding: 20px 0; flex: 1; }
         .menu-list li { padding: 12px 20px; cursor: pointer; color: var(--text-light); font-weight: 500; display: flex; align-items: center; border-left: 4px solid transparent; }
         .menu-list li:hover, .menu-list li.active { background: #ecfdf5; color: var(--primary); border-left-color: var(--primary); }
 
         .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
         .topbar { background: var(--white); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; }
-        .clock-area { font-weight: bold; color: var(--primary); font-size: 16px; }
+        .clock-area { font-weight: bold; color: var(--primary); font-size: 15px; }
         
         .content-area { padding: 30px; }
         .page-section { display: none; } 
         .page-section.active { display: block; } 
 
         .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .card h3 { margin-bottom: 15px; color: var(--primary); border-bottom: 2px solid #f3f4f6; padding-bottom: 10px; }
+        .card h3 { margin-bottom: 15px; color: var(--primary); border-bottom: 2px solid #f3f4f6; padding-bottom: 10px; font-size: 18px;}
         
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px;}
+        /* Table */
+        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 14px;}
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e5e7eb; }
-        th { background: #f9fafb; font-weight: bold; }
+        th { background: #f9fafb; font-weight: bold; color: var(--text-dark);}
+        
+        .flex-row { display: flex; gap: 15px; margin-bottom: 15px; }
+        .flex-row > div { flex: 1; }
     </style>
 </head>
 <body>
@@ -65,7 +76,7 @@
     <div id="login-screen">
         <div class="login-box">
             <img src="logo.png" alt="Logo Sekolah" class="logo-img" onerror="this.src='https://via.placeholder.com/100?text=LOGO'">
-            <h2 style="margin-bottom: 20px; color: var(--primary);">Login Admin</h2>
+            <h2 style="margin-bottom: 20px; color: var(--primary);">Login Sistem</h2>
             <div class="input-group">
                 <label>Username</label>
                 <input type="text" id="username" placeholder="Masukkan user...">
@@ -81,6 +92,7 @@
 
     <!-- ================= LAYAR APLIKASI (DASHBOARD) ================= -->
     <div id="app-screen">
+        <!-- SIDEBAR -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <img src="logo.png" alt="Logo" style="width:60px;" onerror="this.src='https://via.placeholder.com/60?text=LOGO'">
@@ -90,13 +102,13 @@
                 <li class="active" onclick="window.switchMenu('menu-beranda', this)">Beranda</li>
                 <li onclick="window.switchMenu('menu-jadwal', this)">Atur Jadwal</li>
                 <li onclick="window.switchMenu('menu-laporan', this)">Laporan Harian</li>
-                <li onclick="window.switchMenu('menu-rekap-mingguan', this)">Rekap Mingguan</li>
-                <li onclick="window.switchMenu('menu-rekap-bulanan', this)">Rekap Bulanan</li>
+                <li onclick="window.switchMenu('menu-rekap', this)">Rekap Gaji (Mingguan/Bulanan)</li>
                 <li onclick="window.switchMenu('menu-pengaturan', this)">Pengaturan</li>
                 <li onclick="window.logout()" style="color: #ef4444; margin-top: auto;">Keluar</li>
             </ul>
         </aside>
 
+        <!-- MAIN KONTEN -->
         <main class="main-content">
             <header class="topbar">
                 <div>Halo, <strong>Admin Piket</strong></div>
@@ -104,23 +116,24 @@
             </header>
 
             <div class="content-area">
-                <!-- BERANDA -->
+                
+                <!-- 1. BERANDA -->
                 <section id="menu-beranda" class="page-section active">
                     <div class="card">
-                        <h3>📅 Jadwal Mengajar Hari Ini</h3>
-                        <p style="margin-bottom: 15px; font-size: 14px; color: gray;">Silakan ceklis kehadiran guru di bawah ini:</p>
+                        <h3>📅 Jadwal Mengajar Hari Ini (Real-time)</h3>
+                        <p style="margin-bottom: 15px; font-size: 14px; color: var(--text-light);">Silakan ceklis kehadiran guru di bawah ini saat keliling kelas:</p>
                         <table>
                             <thead>
                                 <tr>
                                     <th>Nama Guru</th>
-                                    <th>Kelas & Waktu</th>
+                                    <th>Mapel & Kelas</th>
                                     <th>Status Mengajar</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><strong>Neng Widiyanti</strong></td>
-                                    <td>VII (08.00 - 09.30)</td>
+                                    <td><strong>(8) Neng Widiyanti</strong></td>
+                                    <td>PPKN - Kls VII (08.00 - 09.30)</td>
                                     <td>
                                         <input type="radio" name="status_g1" value="Hadir Penuh"> Penuh &nbsp;
                                         <input type="radio" name="status_g1" value="Cuma Tugas"> Tugas &nbsp;
@@ -128,8 +141,8 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><strong>Asep Gunawan</strong></td>
-                                    <td>IX (08.00 - 09.00)</td>
+                                    <td><strong>(2) Asep Gunawan</strong></td>
+                                    <td>IPS - Kls IX (08.00 - 09.00)</td>
                                     <td>
                                         <input type="radio" name="status_g2" value="Hadir Penuh"> Penuh &nbsp;
                                         <input type="radio" name="status_g2" value="Cuma Tugas"> Tugas &nbsp;
@@ -139,97 +152,180 @@
                             </tbody>
                         </table>
                         
-                        <!-- Tombol Tes Database -->
-                        <button class="btn-primary" onclick="window.simpanKeFirebase()" style="width: auto; padding: 10px 20px;">☁️ Simpan Data ke Firebase</button>
+                        <button class="btn-primary" onclick="window.simpanKeFirebase()" style="width: auto; padding: 10px 20px;">☁️ Simpan Presensi Hari Ini</button>
                     </div>
                 </section>
 
-                <!-- Menu Lainnya (Placeholder) -->
-                <section id="menu-jadwal" class="page-section"><div class="card"><h3>Atur Master Jadwal</h3><p>Area input jadwal baru.</p></div></section>
-                <section id="menu-laporan" class="page-section"><div class="card"><h3>Laporan Harian</h3></div></section>
-                <section id="menu-rekap-mingguan" class="page-section"><div class="card"><h3>Rekap Mingguan</h3></div></section>
-                <section id="menu-rekap-bulanan" class="page-section"><div class="card"><h3>Rekap Bulanan</h3></div></section>
-                <section id="menu-pengaturan" class="page-section"><div class="card"><h3>Pengaturan Sistem</h3></div></section>
+                <!-- 2. ATUR JADWAL -->
+                <section id="menu-jadwal" class="page-section">
+                    <div class="card">
+                        <h3>⚙️ Atur Master Jadwal</h3>
+                        <p style="font-size: 13px; color: var(--text-light); margin-bottom: 15px;">Input data jadwal pelajaran per hari untuk ditampilkan di menu Beranda.</p>
+                        
+                        <div class="flex-row">
+                            <div class="input-group">
+                                <label>Hari</label>
+                                <select><option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option><option>Sabtu</option></select>
+                            </div>
+                            <div class="input-group">
+                                <label>Nama Guru</label>
+                                <input type="text" placeholder="Cth: Ade Hermawan">
+                            </div>
+                        </div>
+                        <div class="flex-row">
+                            <div class="input-group">
+                                <label>Mapel & Kelas</label>
+                                <input type="text" placeholder="Cth: PAIBP (Kelas 7)">
+                            </div>
+                            <div class="input-group">
+                                <label>Jumlah JP</label>
+                                <input type="number" placeholder="Cth: 3">
+                            </div>
+                        </div>
+                        <button class="btn-primary" style="width: auto;">➕ Tambah ke Jadwal</button>
+                    </div>
+
+                    <div class="card">
+                        <h3>Daftar Jadwal (Tersimpan)</h3>
+                        <table>
+                            <thead><tr><th>Hari</th><th>Guru</th><th>Kelas</th><th>JP</th><th>Aksi</th></tr></thead>
+                            <tbody>
+                                <tr><td>Senin</td><td>Neng Widiyanti</td><td>VII</td><td>3</td><td><button class="btn-small">Hapus</button></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 3. LAPORAN HARIAN -->
+                <section id="menu-laporan" class="page-section">
+                    <div class="card">
+                        <h3>📄 Laporan Kehadiran Harian</h3>
+                        <div class="flex-row" style="align-items: flex-end;">
+                            <div class="input-group" style="margin-bottom: 0;">
+                                <label>Pilih Tanggal</label>
+                                <input type="date">
+                            </div>
+                            <div><button class="btn-primary" style="margin-top: 0;">Cari Data</button></div>
+                        </div>
+                        
+                        <table style="margin-top: 20px;">
+                            <thead><tr><th>Nama Guru</th><th>Status</th><th>Jam Diakui</th></tr></thead>
+                            <tbody>
+                                <tr><td>Neng Widiyanti</td><td>Hadir Penuh</td><td>3 JP</td></tr>
+                                <tr><td>Asep Gunawan</td><td>Cuma Tugas</td><td>0 JP</td></tr>
+                            </tbody>
+                        </table>
+                        <button class="btn-primary" style="background: #25D366; width: auto;">💬 Bagikan Laporan ke WA Yayasan</button>
+                    </div>
+                </section>
+
+                <!-- 4. REKAP MINGGUAN / BULANAN -->
+                <section id="menu-rekap" class="page-section">
+                    <div class="card">
+                        <h3>📊 Rekapitulasi Gaji (Mingguan & Bulanan)</h3>
+                        <div class="flex-row">
+                            <div class="input-group">
+                                <label>Pilih Jenis Rekap</label>
+                                <select><option>Rekap Mingguan</option><option>Rekap Bulanan</option></select>
+                            </div>
+                            <div class="input-group">
+                                <label>Pilih Periode Bulan</label>
+                                <input type="month">
+                            </div>
+                        </div>
+                        <button class="btn-primary" style="width: auto;">Tampilkan Rekap</button>
+
+                        <table style="margin-top: 20px;">
+                            <thead><tr><th>Nama Guru</th><th>Total Pengajian</th><th>Total JP Reguler Valid</th><th>Aksi</th></tr></thead>
+                            <tbody>
+                                <tr><td>Ade Hermawan</td><td>4 Sesi</td><td>16 JP</td><td><button class="btn-small">Detail</button></td></tr>
+                                <tr><td>Ida, S.Pd</td><td>0 Sesi</td><td>18 JP</td><td><button class="btn-small">Detail</button></td></tr>
+                            </tbody>
+                        </table>
+                        <button class="btn-small" style="background: var(--primary); color: white;">📥 Download Rekap (Excel)</button>
+                    </div>
+                </section>
+
+                <!-- 5. PENGATURAN -->
+                <section id="menu-pengaturan" class="page-section">
+                    <div class="card">
+                        <h3>⚙️ Pengaturan Profil Sistem</h3>
+                        <div class="input-group">
+                            <label>Nama Kepala Sekolah</label>
+                            <input type="text" value="Bpk. Kepala Sekolah, S.Pd">
+                        </div>
+                        <div class="input-group">
+                            <label>Nama Admin / Petugas Piket</label>
+                            <input type="text" value="Admin TU">
+                        </div>
+                        <button class="btn-primary" style="width: auto;">💾 Simpan Profil</button>
+                    </div>
+
+                    <div class="card" style="border-left: 4px solid var(--danger);">
+                        <h3 style="color: var(--danger);">Zona Berbahaya (Keamanan Data)</h3>
+                        <p style="font-size: 13px; margin-bottom: 15px;">Fitur di bawah ini untuk mengelola database secara langsung.</p>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn-small" style="background: #eab308; color: white;">📂 Backup Data (Download)</button>
+                            <button class="btn-danger">⚠️ Reset Semua Data (Tahun Ajaran Baru)</button>
+                        </div>
+                    </div>
+                </section>
+
             </div>
         </main>
     </div>
 
     <!-- === JAVASCRIPT & FIREBASE === -->
-    <script type="module">
-        // 1. IMPORT FIREBASE (Sesuai kodemu + Firestore untuk Database)
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-analytics.js";
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-        // 2. KONFIGURASI FIREBASE KAMU
+    <script>
+        // 1. KONFIGURASI FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyBA5wTuAHehhM0y76YpPhcjx4VXQs3E-B4",
             authDomain: "presensi-guru-616d1.firebaseapp.com",
             projectId: "presensi-guru-616d1",
             storageBucket: "presensi-guru-616d1.firebasestorage.app",
             messagingSenderId: "447544793101",
-            appId: "1:447544793101:web:8b751116aad4f41f34dd44",
-            measurementId: "G-TK9NQVBX5W"
+            appId: "1:447544793101:web:8b751116aad4f41f34dd44"
         };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-        // 3. INISIALISASI
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const analytics = getAnalytics(app);
-
-        // 4. FUNGSI SIMPAN KE DATABASE (Tersambung ke Tombol)
-        window.simpanKeFirebase = async function() {
-            // Ambil data dari radio button HTML
+        // 2. FUNGSI SIMPAN BERANDA
+        window.simpanKeFirebase = function() {
             const g1 = document.querySelector('input[name="status_g1"]:checked');
             const g2 = document.querySelector('input[name="status_g2"]:checked');
+            if (!g1 || !g2) { alert("Harap isi status kehadiran semua guru!"); return; }
 
-            if (!g1 || !g2) {
-                alert("Harap isi status kehadiran semua guru terlebih dahulu!");
-                return;
-            }
-
-            try {
-                // Proses mengirim data ke koleksi 'laporan_harian' di Firestore
-                const docRef = await addDoc(collection(db, "laporan_harian"), {
-                    waktu_laporan: serverTimestamp(),
-                    petugas: "Admin Piket",
-                    data_guru: [
-                        { nama: "Neng Widiyanti", status: g1.value },
-                        { nama: "Asep Gunawan", status: g2.value }
-                    ]
-                });
-                
-                alert("✅ Mantap! Data berhasil tersimpan di Firebase.\nID Dokumen: " + docRef.id);
-                
-            } catch (e) {
-                console.error("Error menambah data: ", e);
-                alert("❌ Gagal menyimpan data: " + e.message);
-            }
+            db.collection("laporan_harian").add({
+                waktu_laporan: firebase.firestore.FieldValue.serverTimestamp(),
+                data_guru: [
+                    { nama: "Neng Widiyanti", status: g1.value },
+                    { nama: "Asep Gunawan", status: g2.value }
+                ]
+            }).then(() => { alert("✅ Data berhasil tersimpan!"); }).catch(err => alert("Gagal: " + err.message));
         };
 
-        // ================= LOGIKA UI (JAM & NAVIGASI) =================
+        // 3. LOGIKA UI (Jam, Pindah Menu)
         function updateClock() {
             const now = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
             document.getElementById('realtime-clock').innerText = now.toLocaleDateString('id-ID', options);
         }
-        setInterval(updateClock, 1000);
-        updateClock();
+        setInterval(updateClock, 1000); updateClock();
 
         window.doLogin = function() {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('app-screen').style.display = 'flex';
         }
-
         window.logout = function() {
             document.getElementById('app-screen').style.display = 'none';
             document.getElementById('login-screen').style.display = 'flex';
         }
-
         window.switchMenu = function(targetId, clickedLi) {
             document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
             document.getElementById(targetId).classList.add('active');
-            
             document.querySelectorAll('.menu-list li').forEach(li => li.classList.remove('active'));
             clickedLi.classList.add('active');
         }
