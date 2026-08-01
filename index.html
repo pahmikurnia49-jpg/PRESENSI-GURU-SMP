@@ -65,7 +65,7 @@
         .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
         .btn-sm { padding: 6px 12px; font-size: 12px; }
         
-        .input-group { margin-bottom: 16px; width: 100%; text-align: left; }
+        .input-group { margin-bottom: 16px; width: 100%; text-align: left; position: relative; }
         .input-group label { display: block; font-size: 13px; margin-bottom: 6px; color: var(--text-dark); font-weight: 600; }
         .form-control { width: 100%; padding: 12px 15px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; outline: none; transition: all 0.2s; background: #f9fafb; }
         .form-control:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.1); }
@@ -77,10 +77,25 @@
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
 
+        /* Tabel Standar */
         table { width: 100%; border-collapse: collapse; font-size: 14px; }
         th, td { padding: 15px; text-align: left; border-bottom: 1px solid #f3f4f6; }
         th { background: #f8fafc; font-weight: 600; color: var(--text-light); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; }
         tr:hover { background-color: #f9fafb; }
+
+        /* Tabel Khusus Jadwal (Sesuai Gambar) */
+        .table-bordered { border: 1px solid #cbd5e1; }
+        .table-bordered th, .table-bordered td {
+            border: 1px solid #cbd5e1;
+            text-align: center;
+            vertical-align: middle;
+            padding: 10px;
+        }
+        .table-bordered th {
+            background: #f1f5f9;
+            color: #1e293b;
+            font-size: 13px;
+        }
 
         /* Dynamic Class Row */
         .kelas-jp-row {
@@ -117,9 +132,15 @@
             <div class="input-group">
                 <input type="text" id="login-username" class="form-control" placeholder="Username (ketik: admin)" onkeypress="if(event.key === 'Enter') prosesLogin()">
             </div>
-            <div class="input-group">
-                <input type="password" id="login-password" class="form-control" placeholder="Password (ketik: admin123)" onkeypress="if(event.key === 'Enter') prosesLogin()">
+            
+            <!-- Fitur Mata / Show Password -->
+            <div class="input-group" style="position: relative;">
+                <input type="password" id="login-password" class="form-control" placeholder="Password (ketik: admin123)" style="padding-right: 40px;" onkeypress="if(event.key === 'Enter') prosesLogin()">
+                <span onclick="togglePassword()" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-light); padding: 5px;">
+                    <i class="fas fa-eye" id="eye-icon"></i>
+                </span>
             </div>
+
             <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="prosesLogin()">Masuk Aplikasi <i class="fas fa-arrow-right"></i></button>
         </div>
     </div>
@@ -207,6 +228,7 @@
                         </div>
                     </div>
 
+                    <!-- TABEL JADWAL BARU -->
                     <div class="card">
                         <div class="card-header">
                             <h3><i class="fas fa-list" style="color: var(--primary);"></i> Daftar Jadwal Terdaftar</h3>
@@ -216,9 +238,20 @@
                             </select>
                         </div>
                         <div style="overflow-x: auto;">
-                            <table>
-                                <thead><tr><th>Hari</th><th>Guru & Mapel</th><th>Kelas</th><th>JP</th><th>Aksi</th></tr></thead>
-                                <tbody id="tabel-jadwal"></tbody>
+                            <table class="table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 15%;">HARI</th>
+                                        <th style="width: 30%;">NAMA GURU</th>
+                                        <th style="width: 15%;">KELAS</th>
+                                        <th style="width: 15%;">JP/KELAS</th>
+                                        <th style="width: 15%;">TOTAL JP</th>
+                                        <th style="width: 10%;">AKSI</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabel-jadwal">
+                                    <!-- Diisi dari Javascript -->
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -305,7 +338,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
-    <!-- FIREBASE COMPAT (CDN Version yang aman untuk 1 file HTML) -->
+    <!-- FIREBASE COMPAT (CDN Version) -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>
@@ -324,15 +357,13 @@
         
         let db = null;
         try {
-            // Inisialisasi Firebase tanpa error module
             firebase.initializeApp(firebaseConfig);
             db = firebase.firestore();
-            firebase.analytics(); // Mengaktifkan analytics sesuai config-mu
+            firebase.analytics();
         } catch(e) {
             console.error("Gagal konek Firebase:", e);
         }
 
-        // FUNGSI TIMEOUT: Agar loading Swal.fire tidak muter selamanya jika offline!
         const promiseDenganTimeout = (promise, ms = 5000) => {
             return Promise.race([
                 promise,
@@ -341,6 +372,7 @@
         };
 
         const namaHariEn = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+        const urutanHari = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
         let dbJadwal = []; 
 
         window.onload = () => {
@@ -357,27 +389,40 @@
             fetchJadwalDariDB();
         };
 
-        // ================= SISTEM LOGIN (SUDAH FIX ALERT) =================
+        // ================= SISTEM LOGIN & SHOW PASSWORD =================
+        function togglePassword() {
+            const pwdInput = document.getElementById('login-password');
+            const eyeIcon = document.getElementById('eye-icon');
+            
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                pwdInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+
         window.prosesLogin = function() {
             const u = document.getElementById('login-username').value.trim();
             const p = document.getElementById('login-password').value.trim();
             
             if(u === 'admin' && p === 'admin123') {
                 localStorage.setItem('isLoggedIn', 'true');
-                Swal.fire({
-                    icon: 'success', title: 'Login Berhasil!', text: 'Selamat bertugas.',
-                    showConfirmButton: false, timer: 1200
-                }).then(()=>{
+                if(typeof Swal !== 'undefined') {
+                    Swal.fire({ icon: 'success', title: 'Login Berhasil!', showConfirmButton: false, timer: 1200 }).then(()=>{ window.location.reload(); });
+                } else {
                     window.location.reload();
-                });
+                }
             } else {
-                // ALERT PASTI MUNCUL JIKA SALAH
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Akses Ditolak!',
-                    text: 'Username atau Password salah. Silakan periksa kembali!',
-                    confirmButtonColor: '#ef4444'
-                });
+                // Pastikan notifikasi selalu keluar! (Fallback jika Swal error karena koneksi)
+                if(typeof Swal !== 'undefined') {
+                    Swal.fire({ icon: 'error', title: 'Akses Ditolak!', text: 'Username atau Password salah!', confirmButtonColor: '#ef4444' });
+                } else {
+                    alert("Akses Ditolak!\nUsername atau Password salah.");
+                }
             }
         };
 
@@ -439,7 +484,7 @@
             wrapper.appendChild(div);
         }
 
-        // ================= DATABASE JADWAL (FIX LOADING) =================
+        // ================= DATABASE JADWAL & TABEL BARU =================
         function fetchJadwalDariDB() {
             if(db) {
                 db.collection("master_jadwal").onSnapshot((snapshot) => {
@@ -481,13 +526,11 @@
                 if(db) {
                     const batch = db.batch();
                     entries.forEach(item => batch.set(db.collection("master_jadwal").doc(), item));
-                    // GUNAKAN TIMEOUT AGAR TIDAK LOADING TERUS JIKA OFFLINE
                     await promiseDenganTimeout(batch.commit(), 5000);
                 } else throw new Error("Offline");
 
                 Swal.fire('Berhasil!', 'Jadwal berhasil disimpan di Server!', 'success');
             } catch (err) {
-                // JIKA TIMEOUT ATAU OFFLINE, SIMPAN LOKAL, LOADING BERHENTI!
                 entries.forEach(e => dbJadwal.push({ id: 'loc_' + Date.now() + Math.random(), ...e }));
                 localStorage.setItem('local_jadwal', JSON.stringify(dbJadwal));
                 refreshTampilanJadwal();
@@ -497,7 +540,7 @@
         }
 
         window.hapusJadwal = function(id) {
-            Swal.fire({ title: 'Hapus?', icon: 'warning', showCancelButton: true }).then((res) => { 
+            Swal.fire({ title: 'Hapus Kelas Ini?', icon: 'warning', showCancelButton: true }).then((res) => { 
                 if(res.isConfirmed) {
                     if(db && !id.startsWith('loc_')) db.collection("master_jadwal").doc(id).delete();
                     else {
@@ -515,14 +558,80 @@
             document.getElementById('wrapper-kelas-jp').innerHTML = ''; tambahRowKelasJP();
         }
 
+        // LOGIK TABEL JADWAL BARU (ROWSPAN)
         function loadTableJadwal() {
             const filter = document.getElementById('filter-hari').value;
             const tbody = document.getElementById('tabel-jadwal');
             tbody.innerHTML = '';
-            const filtered = filter === "Semua" ? dbJadwal : dbJadwal.filter(j => j.hari === filter);
+            
+            let filtered = filter === "Semua" ? dbJadwal : dbJadwal.filter(j => j.hari === filter);
+            if(filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#6b7280; padding:20px;">Belum ada jadwal terdaftar.</td></tr>';
+                return;
+            }
+
+            // Mengelompokkan data berdasarkan Hari dan Guru
+            let grouped = {};
             filtered.forEach(j => {
-                tbody.innerHTML += `<tr><td>${j.hari}</td><td><strong>${j.guru}</strong><br>${j.mapel}</td><td>${j.kelas}</td><td>${j.jp} JP</td><td><button class="btn btn-sm btn-danger" onclick="hapusJadwal('${j.id}')">Hapus</button></td></tr>`;
+                if(!grouped[j.hari]) grouped[j.hari] = {};
+                if(!grouped[j.hari][j.guru]) grouped[j.hari][j.guru] = { mapel: j.mapel, items: [], totalJP: 0 };
+                
+                grouped[j.hari][j.guru].items.push(j);
+                grouped[j.hari][j.guru].totalJP += parseInt(j.jp);
             });
+
+            // Urutkan berdasarkan hari (Senin, Selasa, dst)
+            let sortedHari = Object.keys(grouped).sort((a,b) => urutanHari.indexOf(a) - urutanHari.indexOf(b));
+
+            let html = '';
+            sortedHari.forEach(hari => {
+                let listGuru = Object.keys(grouped[hari]);
+                let totalBarisDiHari = 0;
+                listGuru.forEach(g => totalBarisDiHari += grouped[hari][g].items.length);
+
+                let isHariPertama = true;
+
+                listGuru.forEach(guru => {
+                    let itemsGuru = grouped[hari][guru].items;
+                    let totalBarisGuru = itemsGuru.length;
+                    let isGuruPertama = true;
+
+                    itemsGuru.forEach(item => {
+                        html += `<tr>`;
+                        
+                        // Kolom Hari
+                        if(isHariPertama) {
+                            html += `<td rowspan="${totalBarisDiHari}"><strong>${hari}</strong></td>`;
+                            isHariPertama = false;
+                        }
+                        
+                        // Kolom Nama Guru
+                        if(isGuruPertama) {
+                            html += `<td rowspan="${totalBarisGuru}">
+                                <strong>${guru}</strong><br>
+                                <span style="font-size:11px; color:#6b7280;">${grouped[hari][guru].mapel}</span>
+                            </td>`;
+                        }
+                        
+                        // Kolom Kelas & JP
+                        html += `<td>${item.kelas}</td>`;
+                        html += `<td>${item.jp} JP</td>`;
+                        
+                        // Kolom Total JP
+                        if(isGuruPertama) {
+                            html += `<td rowspan="${totalBarisGuru}"><strong>${grouped[hari][guru].totalJP} JP</strong></td>`;
+                        }
+
+                        // Kolom Aksi (Tombol Hapus untuk baris kelas ini)
+                        html += `<td><button class="btn btn-sm btn-danger" onclick="hapusJadwal('${item.id}')" title="Hapus Kelas Ini"><i class="fas fa-trash"></i></button></td>`;
+                        
+                        html += `</tr>`;
+                        isGuruPertama = false;
+                    });
+                });
+            });
+
+            tbody.innerHTML = html;
         }
 
         function loadBeranda() {
